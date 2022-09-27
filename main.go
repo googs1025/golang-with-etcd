@@ -3,7 +3,9 @@ package main
 import (
 	"context"
 	"etcd-practice/lib"
+	"flag"
 	"fmt"
+	"github.com/google/uuid"
 	"github.com/gorilla/mux"
 	"log"
 	"os"
@@ -18,6 +20,16 @@ import (
 
 func main()  {
 
+	name := flag.String("name", "", "服务名称")
+	port := flag.Int("p", 0, "服务端口")
+	flag.Parse()
+	if *name == "" {
+		log.Fatal("请指定服务名")
+	}
+	if *port == 0 {
+		log.Fatal("请指定端口")
+	}
+
 	router := mux.NewRouter()
 
 	router.HandleFunc("/product/{id:\\d+}", func(writer http.ResponseWriter, request *http.Request) {
@@ -27,10 +39,13 @@ func main()  {
 	})
 
 	s := lib.NewEtcdClientService()
-	serviceID := "p3"
-	serviceName := "productservice"
+	serviceID := uuid.New().String()
+	//serviceName := "productservice"
 	serviceAddr := "127.0.0.1"
-	servicePort := 8081
+	//servicePort := 8082
+	servicePort := *port
+	serviceName := *name
+
 
 	httpServer := &http.Server{
 		Addr: ":" + strconv.Itoa(servicePort),
@@ -71,6 +86,7 @@ func main()  {
 		fmt.Println(err)
 	}
 
+	// 这里可以做一些回收工作，ex:关闭数据库。
 	err = httpServer.Shutdown(context.Background())
 	if err != nil {
 		log.Fatal(err)
