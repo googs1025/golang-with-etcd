@@ -1,0 +1,8 @@
+[template]
+prefix = "/myconfig"
+src = "my.ini.conf.tmpl"
+dest = "/mygo/my.ini"
+keys = [
+    "/mygo/db_user",
+    "/mygo/db_pass",
+]
