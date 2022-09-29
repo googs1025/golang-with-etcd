@@ -1,4 +1,24 @@
 # golang-with-etcd
+```bigquery
+.
+├── README.md
+├── bash.sh  // server 执行bash文件
+├── client.go // 客户端
+├── confdfiles // confd 配置文件
+│   
+├── lib // 服务发现与服务注册逻辑
+│   ├── LoadBalance.go
+│   ├── client.go
+│   ├── endpoint.go
+│   └── service.go
+├── main.go
+├── my.ini  // 配置文件
+├── myserver.go  // 配置的server
+└── service 
+    ├── productRequest.go
+    └── productTransports.go
+
+```
 ## 基于etcd实现服务发现与服务注册。
 #### 1.本项目支持多实例注册，分为server端与client端。
 #### 2.client端采用随机负载均衡方法获取实例。
