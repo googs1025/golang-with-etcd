@@ -20,7 +20,7 @@
 
 ```
 ## 基于etcd实现服务发现与服务注册。
-[](https://github.com/googs1025/golang-with-etcd/blob/main/image/82192dd67a584bc9828e24e9f27f4a96.png?ram=true)
+![1](https://github.com/googs1025/golang-with-etcd/blob/main/image/82192dd67a584bc9828e24e9f27f4a96.png?ram=true)
 #### 1.本项目支持多实例注册，分为server端与client端。
 #### 2.client端采用随机负载均衡方法获取实例。
 #### 3.server端实现多实例注册，同时写入etcd，且定期续期，另外，也实现进程被kill掉时，优雅从etcd注销。
@@ -55,7 +55,7 @@ go run client.go
 
 
 ## 基于etcd实现配置监听与热更新
-[](https://github.com/googs1025/golang-with-etcd/blob/main/image/%E6%B5%81%E7%A8%8B%E5%9B%BE%20(1).jpg?raw=true)
+![1](https://github.com/googs1025/golang-with-etcd/blob/main/image/%E6%B5%81%E7%A8%8B%E5%9B%BE%20(1).jpg?raw=true)
 #### 项目步骤
 #### 1. 查看my.ini文件
 ```bigquery
