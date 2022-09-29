@@ -18,6 +18,9 @@ import (
 	"time"
 )
 
+
+// 使用server 监听配置更新情况。本次使用ini文件
+
 func main()  {
 	port:=flag.Int("p",0,"服务端口")
 	flag.Parse()
@@ -29,11 +32,13 @@ func main()  {
 		log.Fatal(err)
 	}
 	mux:=http.NewServeMux()
+
+	// 显示配置文件
 	mux.HandleFunc("/",func(writer http.ResponseWriter, request *http.Request) {
 		dbUser:=cfg.Section("db").Key("db_user").Value()
 		dbPass:=cfg.Section("db").Key("db_pass").Value()
-		writer.Write([]byte("<h1>"+dbUser+"</h1>"))
-		writer.Write([]byte("<h1>"+dbPass+"</h1>"))
+		_, _ = writer.Write([]byte("<h1>" + dbUser + "</h1>"))
+		_, _ = writer.Write([]byte("<h1>" + dbPass + "</h1>"))
 	})
 	// 重新加载ini文件
 	mux.HandleFunc("/reload",func(writer http.ResponseWriter, request *http.Request) {
@@ -42,10 +47,12 @@ func main()  {
 	})
 
 
+	// 建立server
 	server:=&http.Server{
 		Addr:":"+strconv.Itoa(*port),
 		Handler:mux,
 	}
+	// 重启server
 	prog:= func(state overseer.State) {
 		_ = server.Serve(state.Listener)
 	}
@@ -62,15 +69,15 @@ func main()  {
 
 	//监听信号
 	go func() {
-		sigC :=make(chan os.Signal)
+		sigC := make(chan os.Signal)
 		signal.Notify(sigC,syscall.SIGINT,syscall.SIGTERM)
 		errChan<-fmt.Errorf("%s",<-sigC)
 	}()
 
 	//监控配置文件变化
 	go func() {
-		fileMd5,err:=getFileMD5("my.ini")
-		if err!=nil{
+		fileMd5, err := getFileMD5("my.ini")
+		if err != nil {
 			log.Println(err)
 			return
 		}
@@ -81,7 +88,7 @@ func main()  {
 				break
 			}
 			if strings.Compare(newMd5,fileMd5) != 0 {
-				fileMd5=newMd5
+				fileMd5 = newMd5
 				fmt.Println("文件发生了变化")
 				// 如果文件发生变化，server执行重启操作
 				overseer.Restart()
@@ -90,7 +97,7 @@ func main()  {
 		}
 	}()
 
-	getErr:=<-errChan
+	getErr := <-errChan
 
 	log.Println(getErr)
 }
